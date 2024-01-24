@@ -44,8 +44,8 @@ class FrontierExplorer : public rclcpp::Node
 
         std::string occupancy_map_topic_ {"map"}; //"global_costmap/costmap"
         
-        std::string map_frame_ {"map"};
-        std::string base_frame_ {"base_link"};
+        std::string map_frame_ {"anymal_map"};
+        std::string base_frame_ {"base"};
         std::string odom_frame_ {"odom"};
 
         std::mutex mutex_;

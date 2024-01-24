@@ -108,7 +108,7 @@ class FrontierDetectorNode(Node):
         self.publishMarkers(frontiers)
 
         # Select best frontier
-        goal = self.select_frontier(frontiers, rank=request.goal_rank, alpha=1, frame=map.info.frame_id)
+        goal = self.select_frontier(frontiers, rank=request.goal_rank, alpha=1, frame=map.header.frame_id)
 
         # Respond to client
         self.get_logger().info("Req: {:d}. Returned x: {:f} y: {:f} .".format(request.goal_rank,
