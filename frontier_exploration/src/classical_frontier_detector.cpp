@@ -29,7 +29,7 @@ FrontierExplorer::FrontierExplorer()
     frontier_map_publisher_ = this->create_publisher<nav_msgs::msg::OccupancyGrid>("f_map", 1);
 
     //tf listner 
-    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>();
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 }
 
@@ -77,7 +77,7 @@ void FrontierExplorer::get_frontiers(const std::shared_ptr<frontier_interfaces::
     // Get robot position
     geometry_msgs::msg::TransformStamped stransform;
     try{
-        stransform = tf_buffer_->lookupTransform(odom_frame_, base_frame_,
+        stransform = tf_buffer_->lookupTransform(map.header.frame_id, base_frame_,
                                                     tf2::TimePointZero, tf2::durationFromSec(3));
     }
     catch (const tf2::TransformException &ex){
@@ -91,6 +91,7 @@ void FrontierExplorer::get_frontiers(const std::shared_ptr<frontier_interfaces::
     // Create and init message
     geometry_msgs::msg::PoseStamped goal_pose;
     goal_pose.header.stamp = this->get_clock()->now();
+    goal_pose.header.frame_id = map.header.frame_id;
     goal_pose.pose.position.x = goal.x;
     goal_pose.pose.position.y = goal.y;
     

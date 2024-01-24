@@ -108,7 +108,7 @@ class FrontierDetectorNode(Node):
         self.publishMarkers(frontiers)
 
         # Select best frontier
-        goal = self.select_frontier(frontiers, rank=request.goal_rank, alpha=1, frame='map')
+        goal = self.select_frontier(frontiers, rank=request.goal_rank, alpha=1, frame=map.info.frame_id)
 
         # Respond to client
         self.get_logger().info("Req: {:d}. Returned x: {:f} y: {:f} .".format(request.goal_rank,
@@ -126,7 +126,7 @@ class FrontierDetectorNode(Node):
             PoseStamped: Pose of the goal
         """
 
-        c = self.get_current_pose()
+        c = self.get_current_pose(frame)
 
         if c is not None:
             for f in frontiers:
@@ -157,7 +157,7 @@ class FrontierDetectorNode(Node):
             out = None
         return out
     
-    def get_current_pose(self) -> PoseStamped:
+    def get_current_pose(self, frame) -> PoseStamped:
         """Get robot pose
 
         Returns:
@@ -165,8 +165,8 @@ class FrontierDetectorNode(Node):
         """
         try:
             t = self.tf_buffer.lookup_transform(
-                "odom",
-                "base_link",
+                frame,
+                "base",
                 rclpy.time.Time())
         except TransformException as ex:
             self.get_logger().info(
@@ -177,12 +177,12 @@ class FrontierDetectorNode(Node):
         p.pose.position.x = t.transform.translation.x
         p.pose.position.y = t.transform.translation.y
         p.header.stamp = self.get_clock().now().to_msg()
-        p.header.frame_id = 'odom'
+        p.header.frame_id = frame
         return p
     
     def publishMarkers(self, regions):
         spheres = Marker()
-        spheres.header.frame_id = 'map'
+        spheres.header.frame_id = 'anymal_map'
         spheres.header.stamp = self.get_clock().now().to_msg()
         spheres.type = Marker.SPHERE_LIST
         spheres.action = Marker.ADD
