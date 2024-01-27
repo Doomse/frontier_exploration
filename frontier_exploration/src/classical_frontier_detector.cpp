@@ -29,7 +29,7 @@ FrontierExplorer::FrontierExplorer()
     frontier_map_publisher_ = this->create_publisher<nav_msgs::msg::OccupancyGrid>("f_map", 1);
 
     //tf listner 
-    tf_buffer_ = std::make_unique<tf2_ros::Buffer>();
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 }
 
