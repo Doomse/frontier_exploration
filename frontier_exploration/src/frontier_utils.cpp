@@ -252,6 +252,9 @@ frontierRegion selectFrontier(vector<frontierRegion> &frontier_regions, int rank
 
     // Sort vec in place
     sort(frontier_regions.begin(), frontier_regions.end(), compareByScore);
+    if(rank >= frontier_regions.size()) {
+        rank = frontier_regions.size() - 1;
+    }
     return frontier_regions.at(rank);
 }
 

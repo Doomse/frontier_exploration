@@ -147,14 +147,14 @@ class FrontierDetectorNode(Node):
             print(f.score)
 
         # Init and return pose
-        if len(frontiers) >= rank:
-            out = PoseStamped()
-            out.pose.position.x = frontiers[rank].x
-            out.pose.position.y = frontiers[rank].y
-            out.header.stamp = self.get_clock().now().to_msg()
-            out.header.frame_id = frame
-        else:
-            out = None
+        if rank >= len(frontiers):
+            rank = len(frontiers) -1
+        
+        out = PoseStamped()
+        out.pose.position.x = frontiers[rank].x
+        out.pose.position.y = frontiers[rank].y
+        out.header.stamp = self.get_clock().now().to_msg()
+        out.header.frame_id = frame
         return out
     
     def get_current_pose(self, frame) -> PoseStamped:
